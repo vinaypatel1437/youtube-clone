@@ -1,0 +1,13 @@
+Video App :-
+    1. Videos Upload. -> Done
+    2. Channel Subscribe. -> Pending
+    3. Videos Like, Comment, Share -> In Progress
+    4. Videos List. -> Done
+    5. Videos play. -> Done
+    6. Trending Page. -> Pending 
+    7. Login / Signup. -> Done
+    8. No. of Views. -> Pending
+    9. Youtube ki dunia ka koisa bhi video search kar sakte hai, Channel ko bhi search kar sakte hai. => Pending
+    
+
+    When we click on particular video. Then its views will get increase by 1 . So jitne time uspe click hoga utne uske views ho jaenge.

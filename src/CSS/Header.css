@@ -1,0 +1,64 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 10px;
+    align-items: center;
+    height: 30px;
+    background-color: white;
+}
+.left-actions {
+    display: flex;
+}
+.user-profile {
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+.logo {
+    margin-left: 5px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: black;
+}
+.super-s {
+    font-size: 8px;
+}
+
+.mid-actions {
+    display: flex;
+    align-items: center;
+}
+.search {
+    height: 25px;
+    border-radius: 15px 0px 0px 15px;
+    padding-left: 10px;
+    width: 250px;
+}
+.search-button {
+    height: 30.2px;
+    width: 50px;
+    border-radius: 0px 15px 15px 0px;
+    cursor: pointer;
+}
+.right-actions {
+    display: flex;
+    align-items: center;
+    width: 100px;
+    justify-content: space-between;
+}
+.signin-btn {
+    border-radius: 10px;
+    height: 30px;
+    width: 80px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid rgb(179, 177, 177);
+    color: blue;
+    background-color: white;
+    cursor: pointer;
+}
