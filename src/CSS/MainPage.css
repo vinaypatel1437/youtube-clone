@@ -1,5 +1,6 @@
 .tags {
     display: flex;
+    overflow-x: scroll;
 }
 .single-tag {
     background-color: rgb(219, 213, 213);

@@ -4,8 +4,10 @@ import React, { useContext, useEffect, useState } from 'react';
 import '../CSS/MainPage.css';
 import { NavigationContext } from '../App';
 import { useNavigate } from 'react-router-dom';
+import { doc, updateDoc } from 'firebase/firestore';
+import { firestore } from '../firebase';
 
-export default function MainPage() {
+export default function MainPage(props) {
     const navigate = useNavigate()
     const [ tags, setTags ] = useState([
         {
@@ -41,12 +43,20 @@ export default function MainPage() {
     useEffect(() => {
         changeLeftOpen(true);
     },[])
-    function handleClick(id) {
+    function handleClick(id, element) {
+        const tempDoc = doc(firestore, "videos", element.videoId.toString())
+        updateDoc(tempDoc, {
+            views: element.views + 1 ,
+        }).then((res) => {
+            console.log(res);
+        }).catch((err) => {
+            console.log(err);
+        })
         navigate(`/video/${id}`, {replace: true});
     }
   return (
     <div>
-        <div className='tags'>
+        <div className='tags' style={{ width: props.origin ? '350px' : '' }}>
             {
                 tags.map((ele, index) => {
                     return (
@@ -57,11 +67,11 @@ export default function MainPage() {
                 })
             }
         </div>
-        <div className='videos'>
+        <div className={props.origin === 'videoDetail' ? '' : 'videos'}>
             {
                 videos.map((ele) => {
                     return(
-                        <div key={ele.id} className="single-video" onClick={() => handleClick(ele.id)}>
+                        <div key={ele.id} className="single-video" onClick={() => handleClick(ele.id, ele)}>
                             <img className="thumbnail-image" src={ele.tumbnailPhoto} alt={ele.displayName} />
                             <div className='video-details'>
                                 <img src={ele.channelPhoto} alt={ele.channelName} className="channel-image" />

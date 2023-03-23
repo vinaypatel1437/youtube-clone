@@ -25,7 +25,7 @@ function App() {
           });
         setVideos(dataArr)
     })
-},[])
+},[]);
   function changeLeftOpen(val) {
     setLeftOpen(val);
   }
