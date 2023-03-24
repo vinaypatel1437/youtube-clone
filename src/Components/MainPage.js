@@ -48,9 +48,9 @@ export default function MainPage(props) {
         updateDoc(tempDoc, {
             views: element.views + 1 ,
         }).then((res) => {
-            console.log(res);
+            //console.log(res);
         }).catch((err) => {
-            console.log(err);
+            //console.log(err);
         })
         navigate(`/video/${id}`, {replace: true});
     }

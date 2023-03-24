@@ -1,32 +1,39 @@
 import Icon from '@mdi/react';
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { memo, useContext, useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router'
 import { NavigationContext } from '../App';
 // import { useLocation } from 'react-router-dom';
 import '../CSS/VideoDetail.css'
 import { mdiThumbUpOutline, mdiShareOutline } from '@mdi/js';
-import { doc, setDoc, updateDoc } from 'firebase/firestore';
-import { firestore } from '../firebase';
+import { doc, getDocs, query, setDoc, updateDoc, where } from 'firebase/firestore';
+import { database, firestore } from '../firebase';
 import MainPage from './MainPage';
 
-export default function VideoDetail() {
+function VideoDetail() {
     // const location = useLocation();
     const { changeLeftOpen, user, videos, setVideos } = useContext(NavigationContext);
     const videoRef = useRef();
     const [video, setVideo] = useState({});
     const [comment, setComment] = useState('');
+    const [isSubscribed, setIsSubscribed] = useState(false);
     const params = useParams();
     useEffect(() => {
         const tempVideo = videos.find((ele) => ele.id == params.id);
-        console.log(tempVideo)
+        //console.log(tempVideo)
         setVideo(tempVideo);
+        const q = query(database.users, where("userId", "==", user?.uid || ""));
+        const snapshot = getDocs(q).then((res) => {
+            const data = [...res.docs];
+            const firstData = data[0].data().subscribedChannels;
+            firstData.includes(video?.channelId) ? setIsSubscribed(true) : setIsSubscribed(false);
+        })
     });
     useEffect(() => {
         changeLeftOpen(false);
     },[]);
     function dateFormatter(data) {
         const date = new Date(data);
-        // console.log(video)
+        // //console.log(video)
         const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'July', 'Aug', 'Sep', 'Nov', 'Dec'];
         return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
     }
@@ -41,18 +48,18 @@ export default function VideoDetail() {
         updateDoc(tempDoc, {
             likes: tempArr,
         }).then((res) => {
-            console.log(res);
+            //console.log(res);
         }).catch((err) => {
-            console.log(err);
+            //console.log(err);
         })
     }
     function handleShare() {
-        console.log(window.location.href);
+        //console.log(window.location.href);
         navigator.clipboard.writeText(window.location.href);
-        console.log("location copied to clipboard")
+        //console.log("location copied to clipboard")
     }
     function handleComment() {
-        console.log("comment");
+        //console.log("comment");
         const tempDoc = doc(firestore, "videos", video.videoId.toString())
         const payload = {
             userName: user.displayName,
@@ -63,10 +70,29 @@ export default function VideoDetail() {
         updateDoc(tempDoc, {
             comments: [...video.comments, payload],
         }).then((res) => {
-            console.log(res);
+            //console.log(res);
             setComment("");
         }).catch((err) => {
-            console.log(err);
+            //console.log(err);
+        })
+    }
+    async function handleSubscribe() {
+        const q = query(database.users, where("userId", "==", user.uid));
+        const snapshot = await getDocs(q);
+        const tempDoc = doc(firestore, "users", snapshot.docs[0].id);
+        let tempArr = [...snapshot.docs[0].data().subscribedChannels];
+        if (tempArr.includes(video.channelId)) {
+            tempArr = tempArr.filter((ele) => ele !== video.channelId);
+        } else {
+            tempArr = [...tempArr,video.channelId];
+        }
+        updateDoc(tempDoc, {
+            subscribedChannels: tempArr,
+        }).then((res) => {
+            //console.log(res);
+            console.log('success');
+        }).catch((err) => {
+            //console.log(err);
         })
     }
     return (
@@ -79,7 +105,7 @@ export default function VideoDetail() {
                         <div className='channel-details-left'>
                             <img src={video?.channelPhoto} alt={video?.channelName} className="channel-image" />
                             <div>{video?.channelName}</div>
-                            <button className='subscribe'>Subscribe</button>
+                            <button className='subscribe' onClick={handleSubscribe}>{isSubscribed ? 'Subscribed': 'Subscribe'}</button>
                         </div>
                         <div className='channel-details-right'>
                             <button onClick={handleLike} className='like-btn'><Icon path={mdiThumbUpOutline} size={1}></Icon>{video?.likes?.length}</button>
@@ -124,3 +150,4 @@ export default function VideoDetail() {
         </div>
     )
 }
+export default memo(VideoDetail)

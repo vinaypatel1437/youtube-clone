@@ -21,6 +21,7 @@ export default function UploadVideo() {
         comments: [],
         channelName: null,
         channelPhoto: null,
+        channelId: null,
     });
     const [videoUploaded, setVideoUploaded] = useState(true);
     const navigate = useNavigate()
@@ -33,10 +34,11 @@ export default function UploadVideo() {
         tempPayload.channelName = user.displayName;
         tempPayload.channelPhoto = user.photoURL;
         tempPayload.createdAt = new Date();
-        console.log(tempPayload);
+        tempPayload.channelId = user.uid;
+        //console.log(tempPayload);
         const res = await addDoc(database.videos, tempPayload);
         navigate('/', {replace: true});
-        console.log(res);
+        //console.log(res);
     }
     function hanldeFileChange(e, type) {
         const file = e.target.files[0];
@@ -45,14 +47,14 @@ export default function UploadVideo() {
         uploadTask.on('state_changed',
             (snapshot) => {
                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                console.log('Upload is ' + progress + '% done');
+                //console.log('Upload is ' + progress + '% done');
             },
             (error) => {
-                console.log(error);
+                //console.log(error);
             },
             () => {
                 getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                    console.log('File available at', downloadURL);
+                    //console.log('File available at', downloadURL);
                     type === 'video' ? videoDetails.videoURL = downloadURL : videoDetails.tumbnailPhoto = downloadURL;
                     setVideoDetails(videoDetails);
                     setVideoUploaded(false);

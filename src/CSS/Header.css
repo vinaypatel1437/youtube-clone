@@ -62,3 +62,11 @@
     background-color: white;
     cursor: pointer;
 }
+.logout-btn {
+    position: fixed;
+    top: 50px;
+    right: 5px;
+    background-color: blanchedalmond;
+    padding: 10px;
+    cursor: pointer;
+}

@@ -9,41 +9,63 @@ import UploadVideo from './Components/UploadVideo';
 import VideoDetail from './Components/VideoDetail';
 import { getDocs } from 'firebase/firestore';
 import { database } from './firebase';
+import SearchPage from './Components/SearchPage';
 
 const NavigationContext = createContext();
 
 function App() {
-  const [ leftOpen, setLeftOpen] = useState(true);
+  const [leftOpen, setLeftOpen] = useState(true);
   const [videos, setVideos] = useState([]);
-  const [user, setUser] = useState();
+  const [users, setUsers] = useState([]);
+  const [serachedVideos, setSearchVideos] = useState([]);
+  const [serachChannels, setSearchChannels] = useState([]);
+  const [user, setUser] = useState([]);
   useEffect(() => {
-    getDocs(database.videos).then((res) => {
+    setInterval(() => {
+      getDocs(database.videos).then((res) => {
         let dataArr = [...res.docs]
-        dataArr  = dataArr.map((ele) => {
-            console.log(ele.data())
-            return {...ele.data(), videoId: ele.id};
-          });
-        setVideos(dataArr)
-    })
-},[]);
+        dataArr = dataArr.map((ele) => {
+          // //console.log(ele.data())
+          return { ...ele.data(), videoId: ele.id };
+        });
+        setVideos(dataArr);
+      })
+      getDocs(database.users).then((res) => {
+        let dataarr = [...res.docs]
+        dataarr = dataarr.map((ele) => {
+          // //console.log(ele.data())
+          return { ...ele.data() };
+        });
+        setUsers(dataarr);
+      });
+    }, 1000);
+  }, []);
+  function searchFunction(text) {
+    const filterVideos = videos.filter((ele) => ele.displayName.toLowerCase().includes(text.toLowerCase()));
+    setSearchVideos(filterVideos);
+    console.log(users);
+    const filterUsers = users.filter((ele) => ele.userName.toLowerCase().includes(text.toLowerCase()));
+    setSearchChannels(filterUsers);
+  }
   function changeLeftOpen(val) {
     setLeftOpen(val);
   }
   return (
     <div className="App">
       <BrowserRouter>
-      <NavigationContext.Provider value={{leftOpen, changeLeftOpen, user, setUser, videos, setVideos}}>
-        <Header />
-        <div style={{display: 'flex'}}>
-        {
-          leftOpen && <LeftNav />
-        }
-        <Routes>
-          <Route path="/" element={<MainPage/>} />
-          <Route path='/upload' element={<UploadVideo/>} />
-          <Route path='/video/:id' element={<VideoDetail/>}></Route>
-        </Routes>
-        </div>
+        <NavigationContext.Provider value={{ leftOpen, changeLeftOpen,serachChannels, user, setUser, videos, setVideos, searchFunction, serachedVideos }}>
+          <Header />
+          <div style={{ display: 'flex' }}>
+            {
+              leftOpen && <LeftNav />
+            }
+            <Routes>
+              <Route path="/" element={<MainPage />} />
+              <Route path='/upload' element={<UploadVideo />} />
+              <Route path='/video/:id' element={<VideoDetail />}></Route>
+              <Route path='/search' element={<SearchPage />}></Route>
+            </Routes>
+          </div>
         </NavigationContext.Provider>
       </BrowserRouter>
     </div>
@@ -51,4 +73,4 @@ function App() {
 }
 
 export default App;
-export {NavigationContext};
+export { NavigationContext };

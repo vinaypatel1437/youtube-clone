@@ -21,4 +21,5 @@ export const storage = getStorage(app);
 export const firestore = getFirestore(app);
 export const database = {
   videos: collection(firestore, 'videos'),
+  users: collection(firestore, 'users'),
 }

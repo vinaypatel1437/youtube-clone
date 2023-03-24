@@ -5,9 +5,9 @@ Video App :-
     5. Videos play. -> Done
     7. Login / Signup. -> Done
     8. No. of Views. -> Done
-    6. Trending Page. -> Pending 
-    2. Channel Subscribe. -> Pending
-    9. Video ki dunia ka koisa bhi video search kar sakte hai, Channel ko bhi search kar sakte hai. => Pending
-    
+    6. Trending Page. -> Static Page. -> HW
+    2. Channel Subscribe. -> Done
+    9. Video ki dunia ka koisa bhi video search kar sakte hai, Channel ko bhi search kar sakte hai. => Done
+    10. CSS -> Acchi CSS. -> HW
 
     When we click on particular video. Then its views will get increase by 1 . So jitne time uspe click hoga utne uske views ho jaenge.
